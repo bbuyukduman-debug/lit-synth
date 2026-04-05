@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; width: 320px; padding: 15px; margin: 0; background: #f8f9fa; }
+        .header { text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 15px; }
+        h2 { margin: 0; color: #2c3e50; font-size: 18px; }
+        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; text-align: center; }
+        .count { font-size: 24px; font-weight: bold; color: #3498db; }
+        .btn { display: block; width: 100%; padding: 10px; margin-bottom: 10px; border: none; border-radius: 5px; color: white; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-blue { background-color: #3498db; }
+        .btn-blue:hover { background-color: #2980b9; }
+        .btn-green { background-color: #27ae60; }
+        .btn-green:hover { background-color: #219150; }
+        .btn-gray { background-color: #95a5a6; }
+        .btn-gray:hover { background-color: #7f8c8d; }
+        .btn-red { background-color: #e74c3c; } 
+        .btn-red:hover { background-color: #c0392b; }
+        #status-message { text-align: center; font-weight: bold; margin-top: 10px; font-size: 13px; }
+.developer-credit {
+    font-size: 10px;          /* Küçük punto */
+    color: #95a5a6;          /* Hafif gri, göz yormayan renk */
+    text-align: center;      /* Ortalı duruş */
+    margin-top: 15px;        /* Butonla arasına mesafe koyar */
+    font-style: italic;      /* Akademik bir hava katması için italik */
+    border-top: 1px solid #ecf0f1; /* Üstüne çok ince bir çizgi çekerek ayırır */
+    padding-top: 10px;
+}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>LIT-SYNTH Asistan</h2>
+    </div>
+    
+    <div class="card">
+        Bellekteki Makale Sayısı: <span id="count" class="count">0</span>
+    </div>
+
+    <button id="analyze-btn" class="btn btn-blue">📍 Mevcut Makaleyi Analiz Et</button>
+    <button id="export-word" class="btn btn-green">📄 Literatürü Sonlandır (Word)</button>
+    <button id="open-settings" class="btn btn-gray">⚙️ API Ayarlarını Yapılandır</button>
+    <button id="clear-btn" class="btn btn-red">🗑️ Belleği Sıfırla (Yeni Proje)</button>
+
+    <p class="developer-credit">Dr. Bedirhan Büyükduman tarafından geliştirildi.</p>
+
+    <p id="status-message"></p>
+
+    <script src="libs/pdf.js"></script>
+    <script src="libs/docx.js"></script>
+    <script src="export.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>

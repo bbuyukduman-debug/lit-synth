@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; background: #f4f7f6; color: #333; }
+        .container { max-width: 550px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .guide { background: #ebf5fb; padding: 15px; border-radius: 8px; font-size: 14px; margin: 15px 0; border-left: 4px solid #3498db; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-family: monospace; }
+        button { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px; }
+        button:hover { background: #219150; }
+        .steps { margin-left: 20px; padding: 0; }
+        .steps li { margin-bottom: 10px; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>LIT-SYNTH Kurulumu</h2>
+        <div class="guide">
+            <strong>Nasıl API Anahtarı Alınır?</strong>
+            <ol class="steps">
+                <li><a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a> sayfasına gidin.</li>
+                <li>Sağ üstteki <strong>"Create API key"</strong> butonuna tıklayın.</li>
+                <li>"Name your key" sütununa <strong>"LIT-SYNTH"</strong> yazın.</li>
+                <li><strong>"Choose an imported project" -> "Create New Project" -> "LIT-SYNTH" -> "Create Project"</strong> aşamalarını takip edin.</li>
+                <li>Gelen kutucukta <strong>"Create Key"</strong> deyin ve ekranınızdaki Key sütununun altındaki (örn: ...1xBc) yazısına tıklayıp açılan yerden API Key'i kopyalayın.</li>
+                <li>Kopyaladığınız kodu aşağıdaki kutuya yapıştırın.</li>
+            </ol>
+        </div>
+        <input type="password" id="api-key" placeholder="Gemini API Anahtarınızı Buraya Yapıştırın">
+        <button id="save-btn">Ayarları Kaydet ve Başlat</button>
+        <p id="status" style="text-align: center; color: #27ae60; display: none; margin-top: 15px; font-weight: bold;">✅ Başarıyla Kaydedildi!</p>
+    </div>
+    <script src="options.js"></script>
+</body>
+</html>
