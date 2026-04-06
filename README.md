@@ -49,6 +49,8 @@ LIT-SYNTH "Local-First" prensibiyle çalışır:
 **Dr. Bedirhan Büyükduman** İstanbul Sabahattin Zaim Üniversitesi, Dr. Öğretim Üyesi.  
 Akademik süreçleri kolaylaştırmak amacıyla açık kaynak olarak geliştirilmiştir.
 
+Tüm görüş ve önerileriniz için: b.buyukduman@gmail.com
+
 ---
 
 ## 📄 Lisans
