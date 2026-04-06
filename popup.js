@@ -27,12 +27,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!tabs || tabs.length === 0) return;
                 const url = tabs[0].url;
                 
-                // Eğer sayfa PDF ise
-                if (url.toLowerCase().includes('.pdf') || url.includes('/article-file/')) {
+                // --- REVİZYON: URL TEMİZLİĞİ VE KONTROLÜ ---
+                // Soru işaretinden (?) sonrasını silerek temiz bir link elde ediyoruz
+                const cleanUrl = url.split('?')[0].toLowerCase();
+                
+                // Eğer sayfa PDF ise (temiz linke göre kontrol ediyoruz)
+                if (cleanUrl.endsWith('.pdf') || cleanUrl.includes('.pdf') || url.includes('/article-file/')) {
                     statusMsg.style.color = "#8e44ad";
                     statusMsg.innerText = "⏳ PDF Okunuyor... Lütfen bekleyin.";
                     
                     try {
+                        // Çıkardığımız temiz URL'yi DEĞİL, orijinal yetkili (tokenlı) URL'yi gönderiyoruz
+                        // Çünkü ScienceDirect o token olmadan PDF'i vermez.
                         const pdfText = await extractTextFromPDF(url);
                         statusMsg.innerText = "🧠 Yapay Zeka analiz ediyor...";
                         
@@ -131,7 +137,7 @@ async function extractTextFromPDF(url) {
         let response = await fetch(targetUrl);
         let contentType = response.headers.get('content-type');
 
-        // 1. KONTROL: Karşımıza bir HTML kabuğu mu çıktı?
+        // 1. KONTROL: Karşımıza bir HTML kabuğu mu çıktı? (Revize: Saf PDF yanıtı geliyorsa bu bloğa girmez)
         if (contentType && contentType.toLowerCase().includes('text/html')) {
             console.log("HTML kabuğu tespit edildi, içindeki saf PDF aranıyor...");
             
@@ -174,15 +180,33 @@ async function extractTextFromPDF(url) {
                     throw new Error("Bulunan gizli link de korumalı çıktı. Analiz yapılamıyor.");
                 }
             } else {
-                throw new Error("Bu sayfanın içine gizlenmiş bir PDF bulunamadı. Lütfen manuel olarak saf PDF sayfasını açın.");
+                // --- REVİZYON: ScienceDirect Özel İstisnası ---
+                // Eğer linkin içinde zaten PDF geçiyorsa ve kabuk kırıcı bir şey bulamadıysa, 
+                // linki saf PDF olarak kabul etmeye zorla.
+                 if(url.toLowerCase().includes('.pdf')){
+                     console.log("Kabuk kırıcı bir şey bulamadı, URL doğrudan okunmaya zorlanıyor...");
+                     response = await fetch(url); 
+                 } else {
+                     throw new Error("Bu sayfanın içine gizlenmiş bir PDF bulunamadı. Lütfen manuel olarak saf PDF sayfasını açın.");
+                 }
             }
         }
 
         // 2. AŞAMA: Saf PDF verisi makine diline (ArrayBuffer) çevriliyor
+        
+        // --- YENİ EKLENEN GÜVENLİK SÜBABI ---
+        if (!response.ok) {
+            throw new Error(`PDF sunucudan alınamadı (Hata: ${response.status}). Lütfen makale sayfasını yenileyip anında tekrar deneyin.`);
+        }
+        const finalContentType = response.headers.get('content-type');
+        if (finalContentType && (finalContentType.includes('text/html') || finalContentType.includes('xml'))) {
+             throw new Error("Sunucu PDF yerine hata sayfası (Zaman aşımı vb.) gönderdi. Makale sayfasını yenileyip (F5) tekrar deneyin.");
+        }
+        // -----------------------------------
+
         const arrayBuffer = await response.arrayBuffer();
         const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
         const pdf = await loadingTask.promise;
-        
         let fullText = "";
         
         // Sayfayı okuma sınırı
