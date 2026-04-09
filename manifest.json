@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "LIT-SYNTH: Akademik Asistan",
   "version": "1.1",
-  "description": "Dergipark makalelerini analiz eder, özetler ve Word raporu hazırlar.",
+  "description": "PDF formatındaki akademik makaleleri analiz eder, özetler ve Word raporu hazırlar.",
   "permissions": [
     "storage",
     "activeTab",
