@@ -70,7 +70,8 @@ async function generateWordReport(articles) {
     const link = document.createElement('a');
     link.href = url;
     link.download = `Literatur_Taramasi_${new Date().toISOString().slice(0,10)}.docx`;
-    document.body.appendChild(link); // Bazı tarayıcılar için gerekli
+    document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

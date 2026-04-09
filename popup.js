@@ -32,14 +32,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const cleanUrl = url.split('?')[0].toLowerCase();
                 
                 // Eğer sayfa PDF ise (temiz linke göre kontrol ediyoruz)
-                if (cleanUrl.endsWith('.pdf') || cleanUrl.includes('.pdf') || url.includes('/pdf/') || url.includes('/article-file/')) {
+                if (cleanUrl.endsWith('.pdf') || cleanUrl.endsWith('/pdf') || cleanUrl.includes('/pdf/') || cleanUrl.includes('/article-file/')) {
                     statusMsg.style.color = "#8e44ad";
                     statusMsg.innerText = "⏳ PDF Okunuyor... Lütfen bekleyin.";
                     
                     try {
                         // Çıkardığımız temiz URL'yi DEĞİL, orijinal yetkili (tokenlı) URL'yi gönderiyoruz
                         // Çünkü ScienceDirect o token olmadan PDF'i vermez.
-                        const pdfText = await extractTextFromPDF(url);
+                        const pdfText = await extractTextFromPDF(url, (current, total) => {
+                            statusMsg.innerText = `📖 PDF okunuyor... (${current}/${total} sayfa)`;
+                        });
                         statusMsg.innerText = "🧠 Yapay Zeka analiz ediyor...";
                         
                         chrome.runtime.sendMessage({ action: "analyze_pdf_text", text: pdfText }, (response) => {
@@ -124,14 +126,44 @@ function handleResponse(response, statusMsg) {
 
 async function updateCount() {
     const data = await chrome.storage.local.get('literature_pool');
+    const pool = data.literature_pool || [];
     const countSpan = document.getElementById('count');
-    if (countSpan) {
-        countSpan.innerText = data.literature_pool ? data.literature_pool.length : 0;
+    if (countSpan) countSpan.innerText = pool.length;
+    renderList(pool);
+}
+
+function renderList(pool) {
+    const container = document.getElementById('article-list-container');
+    const listEl = document.getElementById('article-list');
+    if (!container || !listEl) return;
+
+    if (pool.length === 0) {
+        container.style.display = 'none';
+        return;
     }
+
+    container.style.display = 'block';
+    listEl.innerHTML = pool.map((art, i) => `
+        <div class="article-row">
+            <span class="article-title" title="${(art.title || '').replace(/"/g, '&quot;')}">${art.title || 'Başlıksız'}</span>
+            <button class="article-remove" data-index="${i}" title="Kaldır">✕</button>
+        </div>
+    `).join('');
+
+    listEl.querySelectorAll('.article-remove').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const idx = parseInt(btn.getAttribute('data-index'));
+            const d = await chrome.storage.local.get('literature_pool');
+            const p = d.literature_pool || [];
+            p.splice(idx, 1);
+            await chrome.storage.local.set({ 'literature_pool': p });
+            updateCount();
+        });
+    });
 }
 
 // PDF'in içindeki metinleri okuyan "KABUK KIRICI" Fonksiyon
-async function extractTextFromPDF(url) {
+async function extractTextFromPDF(url, onProgress) {
     try {
         let targetUrl = url;
         let response = await fetch(targetUrl);
@@ -209,9 +241,9 @@ async function extractTextFromPDF(url) {
         const pdf = await loadingTask.promise;
         let fullText = "";
         
-        // Sayfayı okuma sınırı
-        const maxPages = pdf.numPages; 
+        const maxPages = pdf.numPages;
         for (let i = 1; i <= maxPages; i++) {
+            if (onProgress) onProgress(i, maxPages);
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
             const pageText = textContent.items.map(item => item.str).join(" ");
@@ -225,3 +257,14 @@ async function extractTextFromPDF(url) {
         throw error; 
     }
 }
+
+// Arka plandan gelen "Sunucu Yoğun, Tekrar Deniyorum" mesajlarını dinle
+chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "retry_status") {
+        const statusMsg = document.getElementById('status-message');
+        if (statusMsg) {
+            statusMsg.style.color = "#e67e22"; // Turuncu uyarı rengi
+            statusMsg.innerText = `⏳ Sunucu yoğun, tekrar deneniyor... (Deneme ${message.attempt}/${message.maxRetries})`;
+        }
+    }
+});

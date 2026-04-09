@@ -18,6 +18,11 @@
         .btn-red { background-color: #e74c3c; } 
         .btn-red:hover { background-color: #c0392b; }
         #status-message { text-align: center; font-weight: bold; margin-top: 10px; font-size: 13px; }
+        #article-list-container { display:none; max-height:160px; overflow-y:auto; margin-bottom:10px; background:white; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); padding:6px 10px; }
+        .article-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid #f0f0f0; font-size:12px; }
+        .article-row:last-child { border-bottom: none; }
+        .article-title { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:245px; color:#2c3e50; }
+        .article-remove { background:none; border:none; color:#e74c3c; cursor:pointer; font-size:14px; padding:0 2px; flex-shrink:0; line-height:1; }
 .developer-credit {
     font-size: 10px;          /* Küçük punto */
     color: #95a5a6;          /* Hafif gri, göz yormayan renk */
@@ -36,6 +41,9 @@
     
     <div class="card">
         Bellekteki Makale Sayısı: <span id="count" class="count">0</span>
+    </div>
+    <div id="article-list-container">
+        <div id="article-list"></div>
     </div>
 
     <button id="analyze-btn" class="btn btn-blue">📍 Mevcut Makaleyi Analiz Et</button>

@@ -12,6 +12,9 @@
         button:hover { background: #219150; }
         .steps { margin-left: 20px; padding: 0; }
         .steps li { margin-bottom: 10px; line-height: 1.4; }
+        .setting-group { margin: 15px 0; }
+        .setting-group label { font-size: 14px; font-weight: 600; color: #555; }
+        .setting-group select { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -28,6 +31,13 @@
                 <li>Kopyaladığınız kodu aşağıdaki kutuya yapıştırın.</li>
             </ol>
         </div>
+<div class="setting-group">
+    <label for="ai-model">Yapay Zeka Modeli:</label>
+    <select id="ai-model" style="width: 100%; padding: 8px; margin-top: 5px;">
+        <option value="gemini-2.5-flash">Gemini 2.5 Flash (Hızlı, Ücretsiz, Yoğun olabilir)</option>
+        <option value="gemini-2.5-pro">Gemini 2.5 Pro (Daha Akıllı, Yoğunluğu Az, Kotalı)</option>
+    </select>
+</div>
         <input type="password" id="api-key" placeholder="Gemini API Anahtarınızı Buraya Yapıştırın">
         <button id="save-btn">Ayarları Kaydet ve Başlat</button>
         <p id="status" style="text-align: center; color: #27ae60; display: none; margin-top: 15px; font-weight: bold;">✅ Başarıyla Kaydedildi!</p>
