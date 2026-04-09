@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const cleanUrl = url.split('?')[0].toLowerCase();
                 
                 // Eğer sayfa PDF ise (temiz linke göre kontrol ediyoruz)
-                if (cleanUrl.endsWith('.pdf') || cleanUrl.includes('.pdf') || url.includes('/article-file/')) {
+                if (cleanUrl.endsWith('.pdf') || cleanUrl.includes('.pdf') || url.includes('/pdf/') || url.includes('/article-file/')) {
                     statusMsg.style.color = "#8e44ad";
                     statusMsg.innerText = "⏳ PDF Okunuyor... Lütfen bekleyin.";
                     
